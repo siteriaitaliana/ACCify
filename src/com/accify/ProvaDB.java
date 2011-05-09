@@ -88,7 +88,7 @@ public class ProvaDB {
             try{
             conn = DriverManager.getConnection("jdbc:sqlite:test.db");
             Statement stat = conn.createStatement();
-            stat.executeUpdate("INSERT into project_label values ("+projectname+","+label+");");
+            stat.executeUpdate("INSERT into project_label values ('"+projectname+"','"+label+"');");
             
             }
             catch(SQLException e)
