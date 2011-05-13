@@ -1,5 +1,4 @@
 package com.accify;
-
 import com.accify.ProvaDB;
 import java.awt.*;
 import java.util.ArrayList;
@@ -11,10 +10,17 @@ public class GUI {
 	protected Panel ptop1;
 	protected Panel pbott1;
 	protected Panel ptop2;
-	protected Panel pbott2;
+	protected Panel ptop3;
+	protected Panel ptop4;
 	protected Panel pfooter;
 	protected TextArea tconsole;
 	protected TextArea tseconda;
+	protected TextField tf;
+	protected Button addlabel;
+	protected Label addlabel_proj;
+	protected Label addlabel_attr;
+	protected Label addlabel_comp;
+	protected Label addlabel_capab;
 	protected List lista;
 	protected MenuBar mb;
 	protected MenuItem m1;
@@ -28,7 +34,7 @@ public class GUI {
 		gui.run(args);
 	}
 	
-	public void run(String [] args)
+	public void run (String [] args)
 	{
 		f = new Frame("Accify");
 		ptop1 = new Panel();
@@ -36,8 +42,28 @@ public class GUI {
 		pfooter = new Panel();
 		lista = new List();
 		tconsole = new TextArea(1,70);
+		addlabel_proj = new Label("Project Details");
+	    addlabel_attr = new Label("Attributes");
+	    addlabel_comp = new Label("Components");
+	    addlabel_capab = new Label("Capabilities");
+	    ptop2 = new Panel();
+	    ptop3 = new Panel();
+	    ptop4 = new Panel();
+	    ptop1.add(addlabel_proj);
+		ptop2.add(addlabel_attr);
+		ptop3.add(addlabel_comp);
+		ptop4.add(addlabel_capab);
+		
+	    
+	    tf = new TextField(30);
+		addlabel = new Button("Add Label");
+		tconsole.append("Console ready.");
+		pbott1.add(tf);
+		pbott1.add(addlabel);
+		pfooter.add(tconsole);
+		
 		Menu menu = new Menu("File");
-		MenuItem m1 = new MenuItem("Project Info");
+		MenuItem m1 = new MenuItem("Project Details");
 		MenuItem m2 = new MenuItem("Attributes");
 		MenuItem m3 = new MenuItem("Components");
 		MenuItem m4 = new MenuItem("Capabilities");
@@ -48,32 +74,21 @@ public class GUI {
 	    MenuBar mb = new MenuBar();
 	    mb.add(menu);
 	    f.setMenuBar(mb);
-		
-		m2.addActionListener(
-				new ActionListener() {
-            public void actionPerformed(ActionEvent e){
-            	f.remove(ptop1);
-    			f.remove(pbott1);
-
-    			tconsole.append("\nAttributes clicked");
-            }});
-
+	    m1.addActionListener(new MenuListener());
+	    m2.addActionListener(new MenuListener());
+	    m3.addActionListener(new MenuListener());
+	    m4.addActionListener(new MenuListener());
+	  	    		
 		try {ptop1.add(new Label("Project name: "+ProvaDB.readProjectName()));} 
 		catch (HeadlessException e1) {e1.printStackTrace();} 
 		catch (Exception e1) {e1.printStackTrace();}
 		
-		final TextField tf = new TextField(30);
-		final Button addlabel = new Button("Add Label");
-		tconsole.append("Console ready.");
-		pbott1.add(tf);
-		pbott1.add(addlabel);
-		pfooter.add(tconsole);
-
 		addlabel.addActionListener(
 				new ActionListener() {
             public void actionPerformed(ActionEvent e){
             	AddLabel(e);
             }});
+		
 		refreshLista();
 		
 		f.addWindowListener(new WindowAdapter(){
@@ -82,15 +97,17 @@ public class GUI {
                 System.exit(0);
             }
         });
+		
 		f.add(ptop1);
 		f.add(pbott1);
 		f.add(pfooter);
-		f.setSize(600, 600);
+		
+		f.setSize(800, 600);
 		f.setVisible(true);
 		f.setLayout(new FlowLayout());
 	}
 
-	public void refreshLista(){
+	protected void refreshLista(){
 		ptop1.remove(lista);
 		ArrayList<String> projectlabel = new ArrayList<String>();
 		try 
@@ -106,7 +123,7 @@ public class GUI {
 		ptop1.add(lista);
 	}
 	
-	public void AddLabel(ActionEvent e)
+	protected void AddLabel(ActionEvent e)
 	{
 		String projectname = "";
 		TextField field = null;
@@ -125,14 +142,35 @@ public class GUI {
     	tconsole.append("\nLabel Added.");
 		refreshLista();
 	}
+	
+	class MenuListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e){
+			String item = e.getActionCommand(); 
+		    if (item.equals("Attributes"))  {
+			f.removeAll();
+			f.add(ptop2);
+			} else if (item.equals("Components")) {
+				f.removeAll();
+				f.add(ptop3);
+			} else if (item.equals("Capabilities")) {
+				f.removeAll();
+				f.add(ptop4);
+			} else if (item.equals("Project Info")) {
+				f.removeAll();
+				f.add(ptop1);
+				f.add(pbott1);
+			}
+		    
+		    f.add(pfooter);
+			f.setSize(800, 600);
+			f.setVisible(true);
+			f.setLayout(new FlowLayout());
+			tconsole.append("\nAttributes clicked");
 
-	/*public void ProjInt(ActionEvent e) {
-		if(e.getSource()== m1){
-			f.remove(ptop1);
-			f.remove(pbott1);
-			tconsole.append("m1 clicked");
 		}
-	}*/
+
+	}
 
 	
 }
