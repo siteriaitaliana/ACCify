@@ -62,6 +62,7 @@ public class GUI {
 		addlabel = new Button("Add Label");
 		pbott1.add(tf);
 		pbott1.add(addlabel);
+		f.add(ptop1);
 		f.add(pbott1);
 		pfooter.add(tconsole);
 		f.add(pfooter);
@@ -93,7 +94,7 @@ public class GUI {
 		
 		try {pbott1.add(new Label("Project name: "+ProvaDB.readProjectName()));} catch (HeadlessException e1) {e1.printStackTrace();} catch (Exception e1) {e1.printStackTrace();}
 		
-		loadLista();
+		//loadLista();
 		
 		addlabel.addActionListener(
 				new ActionListener() {
@@ -107,7 +108,7 @@ public class GUI {
                 System.exit(0);
             }
         });
-		
+		loadLista();
 		
 	}
 
@@ -123,11 +124,12 @@ public class GUI {
 		for(String str:projectlabel)
 		{	
 			Label label_app = new Label(str);
-			lista.add(label_app);
+			if(!lista.contains(label_app))
+			{
+				lista.add(label_app);
+			}
 		}
-		f.remove(ptop1);
-	
-		f.add(ptop1);
+		
 		for(Label label_add:lista)
 		{
 			ptop1.add(label_add);
@@ -139,24 +141,27 @@ public class GUI {
 	}
 	
 	protected void AddLabel(ActionEvent e)
-	{
-		String projectname = "";
-		TextField field = null;
-		
-		try {projectname = ProvaDB.readProjectName();} 
-		catch (Exception e1) {e1.printStackTrace();}
-		
-    	for(int i=0;i<pbott1.getComponentCount();i++)
-    	{	
-    		if(pbott1.getComponent(i) instanceof TextField)
-    		{
-    			field = (TextField)pbott1.getComponent(i);
-    		}
-    	}
-    	try  {ProvaDB.addLabel(field.getText(), projectname); } catch (Exception exc){System.err.println(exc);}
-    	tconsole.append("\nLabel Added.");
-		loadLista();
-	}
+	 {
+	  String projectname = "";
+	  TextField field = null;
+	  
+	  try {projectname = ProvaDB.readProjectName();} 
+	  catch (Exception e1) {e1.printStackTrace();}
+	  
+	     for(int i=0;i<pbott1.getComponentCount();i++)
+	     { 
+	      if(pbott1.getComponent(i) instanceof TextField)
+	      {
+	       field = (TextField)pbott1.getComponent(i);
+	      }
+	     }
+	     try  {ProvaDB.addLabel(field.getText(), projectname); } catch (Exception exc){System.err.println(exc);}
+	     tconsole.append("\nLabel Added.");
+	  
+	     Label label_app = new Label(field.getText());
+	     ptop1.add(label_app);	  
+	     f.setVisible(true);
+	 }
 	
 	protected class MenuListener implements ActionListener 
 	{
